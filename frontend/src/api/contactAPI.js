@@ -31,6 +31,12 @@ const getSubjects = async () => {
   return await tryCatchFetch(url, getInit());
 };
 
+const getSubjectById = async (subjectId) => {
+  let url = `${BASE_URL}api/subjects/${subjectId}/`;
+  console.log(url);
+  return await tryCatchFetch(url, getInit());
+};
+
 const createSubject = async (newSubject) => {
   let url = `${BASE_URL}api/subjects/`;
   let init = getInit();
@@ -46,10 +52,20 @@ const deleteSubject = async (subjectId) => {
   return await tryCatchFetch(url, init);
 };
 
+const createContact = async (newContactParams) => {
+  let url = `${BASE_URL}api/contacts/`;
+  let init = getInit();
+  init["method"] = "POST";
+  init["body"] = JSON.stringify(newContactParams);
+  return await tryCatchFetch(url, init);
+};
+
 const myExport = {
   getSubjects,
+  getSubjectById,
   createSubject,
   deleteSubject,
+  createContact,
 };
 
 export default myExport;
