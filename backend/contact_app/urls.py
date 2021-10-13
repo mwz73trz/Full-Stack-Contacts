@@ -4,7 +4,7 @@ from contact_app.views import SubjectViewSet, ContactViewSet
 
 router = DefaultRouter()
 router.register("subjects", SubjectViewSet, basename="subject")
-router.register("contacts", SubjectViewSet, basename="contact")
+router.register("contacts", ContactViewSet, basename="contact")
 
 urlpatterns = [
     path("", include(router.urls))
