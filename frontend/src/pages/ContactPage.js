@@ -1,6 +1,7 @@
 import { Component } from "react";
 import contactAPI from "../api/contactAPI";
 import Contact from "../components/Contact";
+import UserContext from "../contexts/UserContext";
 
 class ContactPage extends Component {
   static MODE_TYPE = {
@@ -16,7 +17,8 @@ class ContactPage extends Component {
   async getContact() {
     try {
       let contactId = this.props.match.params.contactId;
-      let contactData = await contactAPI.getContactById(contactId);
+      let token = this.context ? this.context.token : null;
+      let contactData = await contactAPI.getContactById(contactId, token);
       if (contactData) {
         this.setState({ contact: contactData });
       }
@@ -41,6 +43,7 @@ class ContactPage extends Component {
       let inputEmail = document.getElementById("contact-email");
 
       let contactId = this.state.contact.id;
+      let token = this.context ? this.context.token : null;
 
       if (
         inputFirstName &&
@@ -51,7 +54,8 @@ class ContactPage extends Component {
         inputZip &&
         inputPhone &&
         inputEmail &&
-        contactId > 0
+        contactId > 0 &&
+        token
       ) {
         let updatedContact = {
           subject: this.state.contact.subject,
@@ -64,7 +68,11 @@ class ContactPage extends Component {
           phone: inputPhone.value,
           email: inputEmail.value,
         };
-        let data = await contactAPI.editContact(contactId, updatedContact);
+        let data = await contactAPI.editContact(
+          contactId,
+          updatedContact,
+          token
+        );
         if (data) {
           this.setState({ contact: data });
           console.log(data);
@@ -78,8 +86,9 @@ class ContactPage extends Component {
     try {
       let subjectId = this.state.contact.subject;
       let contactId = this.state.contact.id;
-      if (contactId > 0) {
-        let result = await contactAPI.deleteContact(contactId);
+      let token = this.context ? this.context.token : null;
+      if (contactId > 0 && token) {
+        let result = await contactAPI.deleteContact(contactId, token);
         if (result.success) {
           this.props.history.push(`/subjects/${subjectId}/`);
         }
@@ -192,5 +201,7 @@ class ContactPage extends Component {
     );
   }
 }
+
+ContactPage.contextType = UserContext;
 
 export default ContactPage;

@@ -1,6 +1,8 @@
 import { Component } from "react";
+import { Link } from "react-router-dom";
 import contactAPI from "../api/contactAPI";
 import SubjectList from "../components/SubjectsList";
+import UserContext from "../contexts/UserContext";
 
 class HomePage extends Component {
   state = {
@@ -9,20 +11,24 @@ class HomePage extends Component {
 
   getSubjectLists = async () => {
     try {
-      let subjectListData = await contactAPI.getSubjects();
-      this.setState({ subjects: subjectListData });
+      let token = this.context ? this.context.token : null;
+      if (token) {
+        let subjectListData = await contactAPI.getSubjects(token);
+        this.setState({ subjects: subjectListData });
+      }
     } catch {}
   };
 
   createSubject = async () => {
     let inputTitle = document.getElementById("new-subject-title");
     let inputDescription = document.getElementById("new-subject-description");
-    if (inputTitle && inputDescription) {
+    let token = this.context ? this.context.token : null;
+    if (inputTitle && inputDescription && token) {
       let newSubjectParams = {
         title: inputTitle.value,
         description: inputDescription.value,
       };
-      let data = await contactAPI.createSubject(newSubjectParams);
+      let data = await contactAPI.createSubject(newSubjectParams, token);
       console.log("new subject", data);
       if (data) {
         let newSubjects = [...this.state.subjects, data];
@@ -33,8 +39,9 @@ class HomePage extends Component {
 
   deleteSubject = async (subjectId) => {
     try {
-      if (subjectId > 0) {
-        let result = await contactAPI.deleteSubject(subjectId);
+      let token = this.context ? this.context.token : null;
+      if (subjectId > 0 && token) {
+        let result = await contactAPI.deleteSubject(subjectId, token);
         if (result.success) {
           let newSubjects = this.state.subjects.filter((subject, index) => {
             return subject.id !== subjectId;
@@ -50,6 +57,13 @@ class HomePage extends Component {
   }
 
   renderWelcome() {
+    if (!this.context) {
+      return (
+        <Link to="/login">
+          <button>Login</button>
+        </Link>
+      );
+    }
     let subjectListElements = this.state.subjects.map((subject, index) => {
       return (
         <li key={`subject-${index}`}>
@@ -60,7 +74,9 @@ class HomePage extends Component {
 
     return (
       <div>
-        <h2>Welcome to your Contact Group Manager</h2>
+        <h2>
+          Welcome to your Contact Group Manager {this.context.user.username}
+        </h2>
         <h2>Contact Groups:</h2>
         <ul className="simple-list">{subjectListElements}</ul>
         <hr />
@@ -80,5 +96,7 @@ class HomePage extends Component {
     );
   }
 }
+
+HomePage.contextType = UserContext;
 
 export default HomePage;

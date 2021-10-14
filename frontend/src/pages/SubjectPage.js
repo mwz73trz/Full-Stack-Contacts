@@ -1,6 +1,7 @@
 import { Component } from "react";
 import contactAPI from "../api/contactAPI";
 import { Link } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 
 class SubjectPage extends Component {
   state = {
@@ -10,7 +11,8 @@ class SubjectPage extends Component {
   async getSubject() {
     try {
       let subjectId = this.props.match.params.subjectId;
-      let subjectData = await contactAPI.getSubjectById(subjectId);
+      let token = this.context ? this.context.token : null;
+      let subjectData = await contactAPI.getSubjectById(subjectId, token);
       console.log(subjectData);
       if (subjectData) {
         this.setState({ subject: subjectData });
@@ -30,6 +32,7 @@ class SubjectPage extends Component {
       let inputZip = document.getElementById("new-contact-zip");
       let inputPhone = document.getElementById("new-contact-phone");
       let inputEmail = document.getElementById("new-contact-email");
+      let token = this.context ? this.context.token : null;
 
       if (
         inputFirstName &&
@@ -39,7 +42,8 @@ class SubjectPage extends Component {
         inputState &&
         inputZip &&
         inputPhone &&
-        inputEmail
+        inputEmail &&
+        token
       ) {
         let newContactParams = {
           subject: this.state.subject.id,
@@ -52,7 +56,7 @@ class SubjectPage extends Component {
           phone: inputPhone.value,
           email: inputEmail.value,
         };
-        let data = await contactAPI.createContact(newContactParams);
+        let data = await contactAPI.createContact(newContactParams, token);
         if (data) {
           this.getSubject();
         }
@@ -112,5 +116,7 @@ class SubjectPage extends Component {
     );
   }
 }
+
+SubjectPage.contextType = UserContext;
 
 export default SubjectPage;
