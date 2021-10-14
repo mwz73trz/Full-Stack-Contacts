@@ -52,6 +52,11 @@ const deleteSubject = async (subjectId) => {
   return await tryCatchFetch(url, init);
 };
 
+const getContactById = async (contactId) => {
+  let url = `${BASE_URL}api/contacts/${contactId}/`;
+  return await tryCatchFetch(url, getInit());
+};
+
 const createContact = async (newContactParams) => {
   let url = `${BASE_URL}api/contacts/`;
   let init = getInit();
@@ -60,12 +65,30 @@ const createContact = async (newContactParams) => {
   return await tryCatchFetch(url, init);
 };
 
+const editContact = async (contactId, updatedContact) => {
+  let url = `${BASE_URL}api/contacts/${contactId}/`;
+  let init = getInit();
+  init["method"] = "PUT";
+  init["body"] = JSON.stringify(updatedContact);
+  return await tryCatchFetch(url, init);
+};
+
+const deleteContact = async (contactId) => {
+  let url = `${BASE_URL}api/contacts/${contactId}/`;
+  let init = getInit();
+  init["method"] = "DELETE";
+  return await tryCatchFetch(url, init);
+};
+
 const myExport = {
   getSubjects,
   getSubjectById,
   createSubject,
   deleteSubject,
+  getContactById,
   createContact,
+  editContact,
+  deleteContact,
 };
 
 export default myExport;

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import contactAPI from "../api/contactAPI";
+import { Link } from "react-router-dom";
 
 class SubjectPage extends Component {
   state = {
@@ -67,7 +68,9 @@ class SubjectPage extends Component {
     let contactElements = this.state.subject.contacts.map((contact, index) => {
       return (
         <li key={`contact-${index}`}>
-          {contact.first_name} {contact.last_name}
+          <Link to={`/contacts/${contact.id}`}>
+            {contact.first_name} {contact.last_name}
+          </Link>
         </li>
       );
     });
