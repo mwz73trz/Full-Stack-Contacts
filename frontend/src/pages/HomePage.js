@@ -29,7 +29,6 @@ class HomePage extends Component {
         description: inputDescription.value,
       };
       let data = await contactAPI.createSubject(newSubjectParams, token);
-      console.log("new subject", data);
       if (data) {
         let newSubjects = [...this.state.subjects, data];
         this.setState({ subjects: newSubjects });

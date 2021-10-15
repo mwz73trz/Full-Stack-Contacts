@@ -46,7 +46,6 @@ const getSubjects = async (token) => {
 
 const getSubjectById = async (subjectId, token) => {
   let url = `${BASE_URL}api/subjects/${subjectId}/`;
-  console.log(url);
   return await tryCatchFetch(url, getInit(token));
 };
 
