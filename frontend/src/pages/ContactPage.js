@@ -75,7 +75,6 @@ class ContactPage extends Component {
         );
         if (data) {
           this.setState({ contact: data });
-          console.log(data);
           this.changeMode(ContactPage.MODE_TYPE.VIEW);
         }
       }

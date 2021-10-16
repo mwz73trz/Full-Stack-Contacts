@@ -13,7 +13,6 @@ class SubjectPage extends Component {
       let subjectId = this.props.match.params.subjectId;
       let token = this.context ? this.context.token : null;
       let subjectData = await contactAPI.getSubjectById(subjectId, token);
-      console.log(subjectData);
       if (subjectData) {
         this.setState({ subject: subjectData });
       }
@@ -78,7 +77,6 @@ class SubjectPage extends Component {
         </li>
       );
     });
-    console.log(contactElements);
 
     return <ul className="simple-list">{contactElements}</ul>;
   }

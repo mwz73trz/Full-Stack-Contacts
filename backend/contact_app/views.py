@@ -10,3 +10,5 @@ class SubjectViewSet(ModelViewSet):
 class ContactViewSet(ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+
